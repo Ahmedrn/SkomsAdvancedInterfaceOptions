@@ -11,7 +11,7 @@ Inspired by **AdvancedInterfaceOptions** (Stanzilla, Semlar), which is made for 
 - **Chat:** mouse wheel scroll, fade delay, class colours, bubbles, filters, timestamps, chat style.
 - **Interface:** tooltips, loot, bags, unit frame numbers, party background, map, tracker, frame rate limits, vertical sync.
 - **Sound:** sound switches and the master volume, error speech ("Not enough mana"), sound in the background.
-- **All settings:** a search box over 245 console variables of this client, with their descriptions, to read and edit the value of any of them.
+- **All settings:** a search box over every console variable of this client that the game accepts, with their descriptions, to read and edit the value of any of them.
 - **Settings:** re-apply my choices at every login (on by default), backup, restore, reset to the game's defaults.
 
 Every setting shows its console name and default value in its tooltip. Settings that the client does not have (nameplate distance, action camera, spell queue window ...) are not shown, because they would do nothing.

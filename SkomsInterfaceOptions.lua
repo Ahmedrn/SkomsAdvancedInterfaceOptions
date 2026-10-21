@@ -6,8 +6,26 @@ local db
 local PREFIX = "|cff33ff99SkomsInterfaceOptions|r: "
 local function Say(m) print(PREFIX .. m) end
 
-local function Exists(cv) return GetCVar(cv) ~= nil end
-local function Default(cv) return GetCVarDefault and GetCVarDefault(cv) or nil end
+-- this client raises an error for a name that is not a console variable, so every read goes through pcall
+local function Get(cv)
+	local ok, v = pcall(GetCVar, cv)
+	if ok then return v end
+end
+local function Exists(cv) return Get(cv) ~= nil end
+local function Default(cv)
+	if not GetCVarDefault then return nil end
+	local ok, v = pcall(GetCVarDefault, cv)
+	if ok then return v end
+end
+
+-- keep only the names this client really has
+do
+	local kept = {}
+	for _, e in ipairs(ns.CVarList) do
+		if Exists(e[1]) then kept[#kept + 1] = e end
+	end
+	ns.CVarList = kept
+end
 
 -- the value is remembered so it can be re-applied at login
 local function Set(cv, v)
@@ -173,16 +191,16 @@ local function MakeOption(it)
 	local o = { name = it.label, desc = Describe(it), hidden = function() return not Exists(cv) end }
 	if it.kind == "bool" then
 		o.type = "toggle"; o.width = "full"
-		o.get = function() return (tonumber(GetCVar(cv)) or 0) ~= 0 end
+		o.get = function() return (tonumber(Get(cv)) or 0) ~= 0 end
 		o.set = function(_, v) Set(cv, v and "1" or "0") end
 	elseif it.kind == "range" then
 		o.type = "range"; o.min = it.min; o.max = it.max; o.step = it.step; o.width = "double"
-		o.get = function() return tonumber(GetCVar(cv)) or it.min end
+		o.get = function() return tonumber(Get(cv)) or it.min end
 		o.set = function(_, v) Set(cv, v) end
 	else
 		o.type = "select"; o.values = it.values; o.width = "double"
 		o.get = function()
-			local cur = GetCVar(cv)
+			local cur = Get(cv)
 			if it.values[cur] then return cur end
 			local n = tonumber(cur)
 			if n then
@@ -269,7 +287,7 @@ local function BuildOptions()
 			type = "input", order = 10 + i, name = cv, width = "double",
 			desc = (e[2] ~= "" and (e[2] .. "\n") or "") .. "|cff888888default " .. tostring(Default(cv)) .. "|r",
 			hidden = function() return not matches[i] end,
-			get = function() return tostring(GetCVar(cv)) end,
+			get = function() return tostring(Get(cv)) end,
 			set = function(_, v) Set(cv, v) end,
 		}
 	end
@@ -294,7 +312,7 @@ local function BuildOptions()
 					db.backup = {}
 					local n = 0
 					for _, cv in ipairs(managedList) do
-						local v = GetCVar(cv)
+						local v = Get(cv)
 						if v ~= nil then db.backup[cv] = tostring(v); n = n + 1 end
 					end
 					db.backupCount, db.backupDate = n, date("%Y-%m-%d %H:%M")
@@ -319,7 +337,7 @@ local function BuildOptions()
 					local n = 0
 					for _, cv in ipairs(managedList) do
 						local def = Default(cv)
-						if def ~= nil and GetCVar(cv) ~= nil then pcall(SetCVar, cv, def); n = n + 1 end
+						if def ~= nil and Get(cv) ~= nil then pcall(SetCVar, cv, def); n = n + 1 end
 					end
 					Say(n .. " settings reset.")
 				end },
@@ -334,7 +352,7 @@ end
 local function ApplyStored()
 	if not db or not db.enforce then return end
 	for cv, v in pairs(db.values) do
-		if GetCVar(cv) ~= nil and tostring(GetCVar(cv)) ~= v then pcall(SetCVar, cv, v) end
+		if Get(cv) ~= nil and tostring(Get(cv)) ~= v then pcall(SetCVar, cv, v) end
 	end
 end
 
@@ -384,7 +402,7 @@ SlashCmdList["SKOMSINTERFACEOPTIONS"] = function(msg)
 		for _, cv in ipairs(managedList) do
 			if cv:lower() == name then
 				if value ~= "" then Set(cv, value) end
-				Say(cv .. " = " .. tostring(GetCVar(cv)) .. " (default " .. tostring(Default(cv)) .. ")")
+				Say(cv .. " = " .. tostring(Get(cv)) .. " (default " .. tostring(Default(cv)) .. ")")
 				return
 			end
 		end
