@@ -1,6 +1,6 @@
-# SkomsInterfaceOptions 1.0.0 (WoW 3.3.5a)
+# SkomsAdvancedInterfaceOptions 1.0.0 (WoW 3.3.5a)
 
-The hidden game settings (console variables) of the 3.3.5a client in one window, and a way to keep your choices at every login. Type `/sio`.
+The hidden game settings (console variables) of the 3.3.5a client in one window, and a way to keep your choices at every login. Type `/saio` (`/sio` works too).
 
 Inspired by **AdvancedInterfaceOptions** (Stanzilla, Semlar), which is made for retail and later clients and does not work on 3.3.5a. Here only settings that exist in this client are offered (the names were checked against the game executable).
 
@@ -17,14 +17,14 @@ Inspired by **AdvancedInterfaceOptions** (Stanzilla, Semlar), which is made for 
 Every setting shows its console name and default value in its tooltip. Settings that the client does not have (nameplate distance, action camera, spell queue window ...) are not shown, because they would do nothing.
 
 ## Commands
-`/sio` opens the window. `/sio <setting>` shows a setting, `/sio <setting> <value>` sets it. `/sio info`.
+`/saio` opens the window (`/sio` works too). `/saio <setting>` shows a setting, `/saio <setting> <value>` sets it. `/saio info`.
 
 ## Install
-Put the `SkomsInterfaceOptions` folder in `Interface\AddOns`. Disable or delete AdvancedInterfaceOptions if you have it: it is not made for this client and throws errors.
+Put the `SkomsAdvancedInterfaceOptions` folder in `Interface\AddOns`. Disable or delete AdvancedInterfaceOptions if you have it: it is not made for this client and throws errors.
 
 ## Help and feedback
 A setting you miss, or something that does not work:
-- **GitHub issues:** https://github.com/Ahmedrn/SkomsInterfaceOptions/issues
+- **GitHub issues:** https://github.com/Ahmedrn/SkomsAdvancedInterfaceOptions/issues
 - **A comment on the Warperia page**
 - **Discord:** `skomzx`
 

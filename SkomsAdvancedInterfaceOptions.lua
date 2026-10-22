@@ -1,9 +1,9 @@
--- SkomsInterfaceOptions: the hidden game settings (console variables) of the 3.3.5a client in one window.
+-- SkomsAdvancedInterfaceOptions: the hidden game settings (console variables) of the 3.3.5a client in one window.
 -- Inspired by AdvancedInterfaceOptions (Stanzilla, Semlar). Only settings that exist in this client are offered.
 local ADDON, ns = ...
 
 local db
-local PREFIX = "|cff33ff99SkomsInterfaceOptions|r: "
+local PREFIX = "|cff33ff99SkomsAdvancedInterfaceOptions|r: "
 local function Say(m) print(PREFIX .. m) end
 
 -- this client raises an error for a name that is not a console variable, so every read goes through pcall
@@ -245,7 +245,7 @@ local function UpdateMatches()
 end
 
 local function BuildOptions()
-	local root = { type = "group", name = "SkomsInterfaceOptions", childGroups = "tab", args = {} }
+	local root = { type = "group", name = "SkomsAdvancedInterfaceOptions", childGroups = "tab", args = {} }
 	local order = 1
 
 	for _, tab in ipairs(tabs) do
@@ -367,8 +367,8 @@ f:RegisterEvent("PLAYER_ENTERING_WORLD")
 local wait
 f:SetScript("OnEvent", function(self, event, arg1)
 	if event == "ADDON_LOADED" and arg1 == ADDON then
-		SkomsInterfaceOptionsDB = SkomsInterfaceOptionsDB or {}
-		db = SkomsInterfaceOptionsDB
+		SkomsAdvancedInterfaceOptionsDB = SkomsAdvancedInterfaceOptionsDB or {}
+		db = SkomsAdvancedInterfaceOptionsDB
 		if db.enforce == nil then db.enforce = true end
 		db.values = db.values or {}
 		UpdateMatches()
@@ -388,16 +388,17 @@ f:SetScript("OnUpdate", function(self, elapsed)
 	end
 end)
 
-SLASH_SKOMSINTERFACEOPTIONS1 = "/sio"
-SLASH_SKOMSINTERFACEOPTIONS2 = "/skomsinterfaceoptions"
-SlashCmdList["SKOMSINTERFACEOPTIONS"] = function(msg)
+SLASH_SKOMSADVANCEDINTERFACEOPTIONS1 = "/saio"
+SLASH_SKOMSADVANCEDINTERFACEOPTIONS2 = "/sio"
+SLASH_SKOMSADVANCEDINTERFACEOPTIONS3 = "/skomsadvancedinterfaceoptions"
+SlashCmdList["SKOMSADVANCEDINTERFACEOPTIONS"] = function(msg)
 	msg = strlower(strtrim(msg or ""))
 	if msg == "" then
 		Open()
 	elseif msg == "info" then
 		Say("version " .. tostring(GetAddOnMetadata(ADDON, "Version")) .. ", " .. #managedList .. " settings known, " .. CountStored() .. " remembered, re-apply at login: " .. tostring(db.enforce))
 	else
-		-- /sio <name> shows a setting, /sio <name> <value> sets it
+		-- /saio <name> shows a setting, /saio <name> <value> sets it
 		local name, value = msg:match("^(%S+)%s*(.*)$")
 		for _, cv in ipairs(managedList) do
 			if cv:lower() == name then
@@ -406,6 +407,6 @@ SlashCmdList["SKOMSINTERFACEOPTIONS"] = function(msg)
 				return
 			end
 		end
-		Say("/sio opens the window; /sio <setting> [value] shows or sets one setting; /sio info.")
+		Say("/saio opens the window; /saio <setting> [value] shows or sets one setting; /saio info.")
 	end
 end

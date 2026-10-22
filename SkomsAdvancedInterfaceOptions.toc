@@ -1,0 +1,12 @@
+## Interface: 30300
+## Title: SkomsAdvancedInterfaceOptions
+## Notes: Hidden game settings (console variables) in one window: camera, nameplates, combat, chat, interface, sound. Can re-apply your choices at every login. Type /saio.
+## Version: 1.0.0
+## Author: Skom
+## SavedVariables: SkomsAdvancedInterfaceOptionsDB
+## OptionalDeps: LibStub, CallbackHandler-1.0
+## X-Inspired-By: AdvancedInterfaceOptions by Stanzilla and Semlar
+
+libs\embeds.xml
+cvarlist.lua
+SkomsAdvancedInterfaceOptions.lua
