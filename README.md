@@ -9,7 +9,7 @@ Inspired by **AdvancedInterfaceOptions** (Stanzilla, Semlar), which is made for 
 - **Nameplates:** enemy and friendly plates by type (players, pets, guardians, totems), class colour on plates, and the names above units (own, NPC, guild, PvP title, friendly and enemy players, pets, guardians, totems).
 - **Combat:** auto attack on target change, assist, self cast, auto dismount / unshift / stand, target cast bar, target of target mode, threat number, castable buffs and dispellable debuffs, arena frames, action bar locks.
 - **Chat:** mouse wheel scroll, fade delay, class colours, bubbles, filters, timestamps, chat style.
-- **Interface:** tooltips, loot, bags, unit frame numbers, party background, map, tracker, frame rate limits, vertical sync.
+- **Interface:** tooltips, loot, bags, unit frame numbers, party background, map, tracker, frame rate limits, vertical sync, and two switches to hide the red error messages ("Not enough mana", "Out of range") and the yellow information messages.
 - **Sound:** sound switches and the master volume, error speech ("Not enough mana"), sound in the background.
 - **All settings:** a search box over every console variable of this client that the game accepts, with their descriptions, to read and edit the value of any of them.
 - **Settings:** re-apply my choices at every login (on by default), backup, restore, reset to the game's defaults.

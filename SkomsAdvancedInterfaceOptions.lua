@@ -41,6 +41,8 @@ local function B(cv, label, desc) return { cv = cv, label = label, desc = desc, 
 local function R(cv, label, desc, min, max, step) return { cv = cv, label = label, desc = desc, kind = "range", min = min, max = max, step = step } end
 local function S(cv, label, desc, values) return { cv = cv, label = label, desc = desc, kind = "select", values = values } end
 local function H(text) return { header = text } end
+-- a switch of this addon (not a console variable), kept in db.flags
+local function F(key, label, desc) return { key = key, label = label, desc = desc, kind = "flag" } end
 local function T(text) return { text = text } end
 
 local tabs = {
@@ -142,6 +144,9 @@ local tabs = {
 		B("showNewbieTips", "Beginner tooltips"),
 		B("showTutorials", "Tutorials"),
 		B("scriptErrors", "Show Lua errors in a pop-up", "Normally off when you use BugSack."),
+		H("Messages on the screen"),
+		F("hideErrors", "Hide the red error messages", "\"Not enough mana\", \"Out of range\", \"Spell is not ready yet\" ... The same as /script UIErrorsFrame:UnregisterEvent(\"UI_ERROR_MESSAGE\"), kept at every login."),
+		F("hideInfo", "Hide the yellow information messages", "The yellow lines in the middle of the screen (\"Inventory is full\", objective progress ...)."),
 		H("Unit frames"),
 		B("playerStatusText", "Numbers on the player frame"),
 		B("targetStatusText", "Numbers on the target frame"),
@@ -186,7 +191,14 @@ local function Describe(it)
 	return d .. "|cff888888" .. it.cv .. (def and ("  (default " .. tostring(def) .. ")") or "") .. "|r"
 end
 
+local ApplyFlags
+
 local function MakeOption(it)
+	if it.kind == "flag" then
+		return { type = "toggle", width = "full", name = it.label, desc = it.desc,
+			get = function() return db.flags[it.key] end,
+			set = function(_, v) db.flags[it.key] = v or nil; ApplyFlags() end }
+	end
 	local cv = it.cv
 	local o = { name = it.label, desc = Describe(it), hidden = function() return not Exists(cv) end }
 	if it.kind == "bool" then
@@ -259,7 +271,7 @@ local function BuildOptions()
 			else
 				local o = MakeOption(it)
 				o.order = i
-				g.args[it.cv] = o
+				g.args[it.cv or it.key] = o
 			end
 		end
 		root.args[tab.key] = g
@@ -349,6 +361,13 @@ end
 -- ---------------------------------------------------------------------------------------------------------
 -- start-up
 -- ---------------------------------------------------------------------------------------------------------
+-- the red and yellow messages of the screen come from two events of UIErrorsFrame
+ApplyFlags = function()
+	if not (db and UIErrorsFrame) then return end
+	if db.flags.hideErrors then UIErrorsFrame:UnregisterEvent("UI_ERROR_MESSAGE") else UIErrorsFrame:RegisterEvent("UI_ERROR_MESSAGE") end
+	if db.flags.hideInfo then UIErrorsFrame:UnregisterEvent("UI_INFO_MESSAGE") else UIErrorsFrame:RegisterEvent("UI_INFO_MESSAGE") end
+end
+
 local function ApplyStored()
 	if not db or not db.enforce then return end
 	for cv, v in pairs(db.values) do
@@ -371,10 +390,12 @@ f:SetScript("OnEvent", function(self, event, arg1)
 		db = SkomsAdvancedInterfaceOptionsDB
 		if db.enforce == nil then db.enforce = true end
 		db.values = db.values or {}
+		db.flags = db.flags or {}
 		UpdateMatches()
 		LibStub("AceConfig-3.0"):RegisterOptionsTable(ADDON, BuildOptions())
 		LibStub("AceConfigDialog-3.0"):AddToBlizOptions(ADDON, ADDON)
 	elseif event == "PLAYER_LOGIN" then
+		ApplyFlags()
 		ApplyStored()
 	elseif event == "PLAYER_ENTERING_WORLD" then
 		-- once more a little later: other addons and the game may have changed settings during the load
