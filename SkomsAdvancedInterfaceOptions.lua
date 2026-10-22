@@ -355,7 +355,7 @@ local function BuildOptions()
 				end },
 		},
 	}
-	root.args.about = ns.AboutGroup(99)
+	if ns.AboutGroup then root.args.about = ns.AboutGroup(99) end   -- about.lua needs a full restart after an update
 	return root
 end
 
