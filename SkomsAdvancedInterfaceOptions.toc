@@ -9,4 +9,5 @@
 
 libs\embeds.xml
 cvarlist.lua
+about.lua
 SkomsAdvancedInterfaceOptions.lua

@@ -355,6 +355,7 @@ local function BuildOptions()
 				end },
 		},
 	}
+	root.args.about = ns.AboutGroup(99)
 	return root
 end
 
