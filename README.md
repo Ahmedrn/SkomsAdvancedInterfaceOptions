@@ -1,33 +1,25 @@
-# SkomsAdvancedInterfaceOptions 1.1.0 (WoW 3.3.5a)
+# Skom's Advanced Interface Options (WoW 3.3.5a)
 
-The hidden game settings (console variables) of the 3.3.5a client in one window, and a way to keep your choices at every login. Type `/saio` (`/sio` works too).
+Unlock the hidden game settings of the 3.3.5a client in one clean window, and keep your choices at every login.
 
-Inspired by **AdvancedInterfaceOptions** (Stanzilla, Semlar), which is made for retail and later clients and does not work on 3.3.5a. Here only settings that exist in this client are offered (the names were checked against the game executable).
+## Features
 
-## Tabs
-- **Camera:** maximum zoom distance (up to 4x), camera follow style, terrain tilt, water collision, bobbing, follow speeds, mouse look speed, invert mouse, sticky targeting.
-- **Nameplates:** enemy and friendly plates by type (players, pets, guardians, totems), class colour on plates, and the names above units (own, NPC, guild, PvP title, friendly and enemy players, pets, guardians, totems).
-- **Combat:** auto attack on target change, assist, self cast, auto dismount / unshift / stand, target cast bar, target of target mode, threat number, castable buffs and dispellable debuffs, arena frames, action bar locks.
-- **Chat:** mouse wheel scroll, fade delay, class colours, bubbles, filters, timestamps, chat style.
-- **Interface:** tooltips, loot, bags, unit frame numbers, party background, map, tracker, frame rate limits, vertical sync, and two switches to hide the red error messages ("Not enough mana", "Out of range") and the yellow information messages.
-- **Sound:** sound switches and the master volume, error speech ("Not enough mana"), sound in the background.
-- **All settings:** a search box over every console variable of this client that the game accepts, with their descriptions, to read and edit the value of any of them. *Only the changed ones* lists every setting that is not at the game's default.
-- **Settings:** re-apply my choices at every login (on by default), backup, restore, reset to the game's defaults. A setting you change in the game's own options (for example Interface > Status Text) becomes your new choice.
-
-Every setting shows its console name and default value in its tooltip, and settings changed from the game's default are marked with a `*`. Settings that the client does not have (nameplate distance, action camera, spell queue window ...) are not shown, because they would do nothing.
+- **Camera:** max zoom up to 4x, follow style, terrain tilt, water collision, mouse look speed.
+- **Nameplates:** enemy and friendly plates by type (players, pets, totems), class colors, and the names above units.
+- **Combat:** auto attack on target change, self cast, auto dismount, target cast bar, threat number, arena frames.
+- **Chat:** mouse wheel scroll, fade delay, class colors, bubbles, timestamps.
+- **Interface and Sound:** tooltips, loot, frame rate limits, sound in the background, and switches to silence the red error messages ("Not enough mana", "Out of range").
+- **Search every setting** the client accepts, with descriptions, and list only the ones you changed.
+- **Remembered at every login,** with backup, restore and reset to the game defaults.
+- Only settings that really work on 3.3.5a, unlike the retail AdvancedInterfaceOptions (disable it if you have it).
 
 ## Commands
-`/saio` opens the window (`/sio` works too). `/saio <setting>` shows a setting, `/saio <setting> <value>` sets it. `/saio info`.
 
-## Install
-Put the `SkomsAdvancedInterfaceOptions` folder in `Interface\AddOns`. Disable or delete AdvancedInterfaceOptions if you have it: it is not made for this client and throws errors.
+- `/saio` (or `/sio`) opens the window.
+- `/saio <setting>` shows a setting, `/saio <setting> <value>` sets it.
 
-## Help and feedback
-A setting you miss, or something that does not work:
-- **GitHub issues:** https://github.com/Ahmedrn/SkomsAdvancedInterfaceOptions/issues
-- **A comment on the Warperia page**
+## Feedback
+
+- **GitHub:** https://github.com/Ahmedrn/SkomsAdvancedInterfaceOptions/issues
+- **Warperia:** comment on the addon page
 - **Discord:** `skomzx`
-
-## Credits
-- **AdvancedInterfaceOptions** by **Stanzilla** and **Semlar**: the idea and the list of hidden settings. No code copied.
-- **Ace3** for the window.
