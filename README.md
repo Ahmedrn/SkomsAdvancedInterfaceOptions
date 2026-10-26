@@ -1,4 +1,4 @@
-# SkomsAdvancedInterfaceOptions 1.0.0 (WoW 3.3.5a)
+# SkomsAdvancedInterfaceOptions 1.1.0 (WoW 3.3.5a)
 
 The hidden game settings (console variables) of the 3.3.5a client in one window, and a way to keep your choices at every login. Type `/saio` (`/sio` works too).
 
@@ -11,10 +11,10 @@ Inspired by **AdvancedInterfaceOptions** (Stanzilla, Semlar), which is made for 
 - **Chat:** mouse wheel scroll, fade delay, class colours, bubbles, filters, timestamps, chat style.
 - **Interface:** tooltips, loot, bags, unit frame numbers, party background, map, tracker, frame rate limits, vertical sync, and two switches to hide the red error messages ("Not enough mana", "Out of range") and the yellow information messages.
 - **Sound:** sound switches and the master volume, error speech ("Not enough mana"), sound in the background.
-- **All settings:** a search box over every console variable of this client that the game accepts, with their descriptions, to read and edit the value of any of them.
-- **Settings:** re-apply my choices at every login (on by default), backup, restore, reset to the game's defaults.
+- **All settings:** a search box over every console variable of this client that the game accepts, with their descriptions, to read and edit the value of any of them. *Only the changed ones* lists every setting that is not at the game's default.
+- **Settings:** re-apply my choices at every login (on by default), backup, restore, reset to the game's defaults. A setting you change in the game's own options (for example Interface > Status Text) becomes your new choice.
 
-Every setting shows its console name and default value in its tooltip. Settings that the client does not have (nameplate distance, action camera, spell queue window ...) are not shown, because they would do nothing.
+Every setting shows its console name and default value in its tooltip, and settings changed from the game's default are marked with a `*`. Settings that the client does not have (nameplate distance, action camera, spell queue window ...) are not shown, because they would do nothing.
 
 ## Commands
 `/saio` opens the window (`/sio` works too). `/saio <setting>` shows a setting, `/saio <setting> <value>` sets it. `/saio info`.

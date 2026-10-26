@@ -18,6 +18,22 @@ local function Default(cv)
 	if ok then return v end
 end
 
+-- changed = not the game's default (or, when the client cannot tell the default, a value set with this addon)
+local function Changed(cv)
+	local cur, def = Get(cv), Default(cv)
+	if cur == nil then return false end
+	if def == nil then return db ~= nil and db.values[cv] ~= nil end
+	if cur == def then return false end
+	local a, b = tonumber(cur), tonumber(def)
+	if a and b then return math.abs(a - b) > 0.0001 end
+	return strlower(cur) ~= strlower(def)
+end
+
+local function Highlight(text, changed)
+	if changed then return text .. " *" end
+	return text
+end
+
 -- keep only the names this client really has
 do
 	local kept = {}
@@ -195,12 +211,13 @@ local ApplyFlags
 
 local function MakeOption(it)
 	if it.kind == "flag" then
-		return { type = "toggle", width = "full", name = it.label, desc = it.desc,
+		return { type = "toggle", width = "full", desc = it.desc,
+			name = function() return Highlight(it.label, db.flags[it.key]) end,
 			get = function() return db.flags[it.key] end,
 			set = function(_, v) db.flags[it.key] = v or nil; ApplyFlags() end }
 	end
 	local cv = it.cv
-	local o = { name = it.label, desc = Describe(it), hidden = function() return not Exists(cv) end }
+	local o = { name = function() return Highlight(it.label, Changed(cv)) end, desc = Describe(it), hidden = function() return not Exists(cv) end }
 	if it.kind == "bool" then
 		o.type = "toggle"; o.width = "full"
 		o.get = function() return (tonumber(Get(cv)) or 0) ~= 0 end
@@ -243,13 +260,14 @@ end
 
 -- the browser
 local MAXSHOW = 30
-local filter, matches, matchCount = "", {}, 0
+local filter, matches, matchCount, changedOnly = "", {}, 0, false
 local function UpdateMatches()
 	wipe(matches); matchCount = 0
-	if #filter < 2 then return end
+	if #filter < 2 and not changedOnly then return end
 	local f = filter:lower()
 	for i, e in ipairs(ns.CVarList) do
-		if Exists(e[1]) and (e[1]:lower():find(f, 1, true) or e[2]:lower():find(f, 1, true)) then
+		if Exists(e[1]) and (#filter < 2 or e[1]:lower():find(f, 1, true) or e[2]:lower():find(f, 1, true))
+			and (not changedOnly or Changed(e[1])) then
 			matchCount = matchCount + 1
 			if matchCount <= MAXSHOW then matches[i] = true end
 		end
@@ -261,7 +279,8 @@ local function BuildOptions()
 	local order = 1
 
 	for _, tab in ipairs(tabs) do
-		local g = { type = "group", name = tab.name, order = order, args = {} }
+		local g = { type = "group", name = tab.name, order = order, args = {
+			legend = { type = "description", order = 0, name = "*: changed from the game's default." } } }
 		order = order + 1
 		for i, it in ipairs(tab.items) do
 			if it.header then
@@ -285,9 +304,13 @@ local function BuildOptions()
 			filter = { type = "input", order = 2, name = "Search", width = "double",
 				get = function() return filter end,
 				set = function(_, v) filter = strtrim(v or ""); UpdateMatches() end },
+			changedOnly = { type = "toggle", order = 2.5, name = "Only the changed ones",
+				desc = "The settings that are not at the game's default (marked with a *).",
+				get = function() return changedOnly end,
+				set = function(_, v) changedOnly = v; UpdateMatches() end },
 			count = { type = "description", order = 3,
 				name = function()
-					if #filter < 2 then return "Type at least 2 letters." end
+					if #filter < 2 and not changedOnly then return "Type at least 2 letters." end
 					if matchCount == 0 then return "Nothing found." end
 					return ("%d found%s"):format(matchCount, matchCount > MAXSHOW and (", showing the first " .. MAXSHOW .. ", type more to narrow it down") or "")
 				end },
@@ -296,7 +319,7 @@ local function BuildOptions()
 	for i, e in ipairs(ns.CVarList) do
 		local cv = e[1]
 		root.args.browser.args["c" .. i] = {
-			type = "input", order = 10 + i, name = cv, width = "double",
+			type = "input", order = 10 + i, name = function() return Highlight(cv, Changed(cv)) end, width = "double",
 			desc = (e[2] ~= "" and (e[2] .. "\n") or "") .. "|cff888888default " .. tostring(Default(cv)) .. "|r",
 			hidden = function() return not matches[i] end,
 			get = function() return tostring(Get(cv)) end,
@@ -369,12 +392,30 @@ ApplyFlags = function()
 	if db.flags.hideInfo then UIErrorsFrame:UnregisterEvent("UI_INFO_MESSAGE") else UIErrorsFrame:RegisterEvent("UI_INFO_MESSAGE") end
 end
 
+local applying
 local function ApplyStored()
 	if not db or not db.enforce then return end
+	applying = true
 	for cv, v in pairs(db.values) do
 		if Get(cv) ~= nil and tostring(Get(cv)) ~= v then pcall(SetCVar, cv, v) end
 	end
+	applying = false
 end
+
+-- a remembered setting changed somewhere else while an options window is open (the game's own Interface
+-- options have checkboxes for many of them) is the player's new choice: remember it, or the old value would be
+-- put back at the next login. Changes made by other addons outside the options are still undone.
+local function OptionsOpen()
+	for _, name in ipairs({ "InterfaceOptionsFrame", "VideoOptionsFrame", "AudioOptionsFrame" }) do
+		local frame = _G[name]
+		if frame and frame:IsShown() then return true end
+	end
+	return false
+end
+hooksecurefunc("SetCVar", function(cv, v)
+	if applying or not db or db.values[cv] == nil or not OptionsOpen() then return end
+	db.values[cv] = tostring(v)
+end)
 
 local function Open()
 	LibStub("AceConfigDialog-3.0"):Open(ADDON)

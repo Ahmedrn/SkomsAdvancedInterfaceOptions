@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0 (2026-10-26)
+
+- Settings that are not at the game's default are marked with a *; All settings can list only the changed ones.
+- Fixed: a remembered setting changed in the game's own options (for example Interface > Status Text) was put back to the old value at the next login. Changes made while an options window is open are now remembered.
+- The addon list shows a readable name ("Skom's Proc Glow" style). The About tab uses those names, and lists Skom's Arena Stats.
+
 ## 1.0.0 (2026-10-21)
 
 First release.
