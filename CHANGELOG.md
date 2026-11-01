@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.0 (2026-11-01)
+
+- One Skom's minimap button opens all your Skom's addons when two or more are installed (/skoms).
+
 ## 1.1.0 (2026-10-26)
 
 - Changed settings are marked, and All settings can list only those.

@@ -275,7 +275,7 @@ local function UpdateMatches()
 end
 
 local function BuildOptions()
-	local root = { type = "group", name = "SkomsAdvancedInterfaceOptions", childGroups = "tab", args = {} }
+	local root = { type = "group", name = "Skom's Advanced Interface Options", childGroups = "tab", args = {} }
 	local order = 1
 
 	for _, tab in ipairs(tabs) do
@@ -435,7 +435,7 @@ f:SetScript("OnEvent", function(self, event, arg1)
 		db.flags = db.flags or {}
 		UpdateMatches()
 		LibStub("AceConfig-3.0"):RegisterOptionsTable(ADDON, BuildOptions())
-		LibStub("AceConfigDialog-3.0"):AddToBlizOptions(ADDON, ADDON)
+		LibStub("AceConfigDialog-3.0"):AddToBlizOptions(ADDON, "Skom's Advanced Interface Options")
 	elseif event == "PLAYER_LOGIN" then
 		ApplyFlags()
 		ApplyStored()
